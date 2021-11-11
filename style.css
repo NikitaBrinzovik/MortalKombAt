@@ -209,3 +209,29 @@ body {
     width: 100%;
 }
 
+.btnOnC{
+    position: absolute;
+    z-index: 999;
+    height: 100px;
+    width: 100px;
+    border: #00d600 2px solid;
+}
+
+.life {
+    width: 100%
+}
+.helth{
+
+}
+.img{}
+.player{}
+.character{}
+
+.player1{}
+.player2{}
+
+.SCORPION{}
+.mamamkaTvoya{
+    transform: scaleX(-1);
+
+}
