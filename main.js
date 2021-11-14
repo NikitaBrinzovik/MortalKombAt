@@ -16,7 +16,7 @@ const petr = {
     attack: function () { return console.log(`${this.name} Fight...`)},
     fClass:"player1"
 }
-const MamitoAleksandrovna = {
+const mamitoAleksandrovna = {
     name: "mamamkaTvoya",
     hp: 88,
     img: "http://reactmarathon-api.herokuapp.com/assets/sonya.gif",
@@ -26,11 +26,12 @@ const MamitoAleksandrovna = {
 
 }
 
+const arenas =document.querySelector('div.arenas')
 /*const $player1 = document.createElement('div')
 $player1.classList.add("player1")*/
 const $createPlayer = (player) => {
 
-    const arenas =document.querySelector('div.arenas')
+
 
 
     const $player1 =document.createElement('div')
@@ -66,5 +67,5 @@ $createPlayer(petr)
 
 ////////////////helpers
 const onClickF = () => {
-     $createPlayer(MamitoAleksandrovna)
+     $createPlayer(mamitoAleksandrovna)
 }
