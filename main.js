@@ -35,9 +35,13 @@ const HIT = {
     foot: 20,
 }
 const ATTACK = ['head', 'body', 'foot'];
+
+const montainWinnerName=(name)=>$arenas.appendChild(winner(name))
+const getRandomNumber = (num) => Math.ceil(Math.random() * num)
+const getIIPoints =()=>ATTACK[getRandomNumber(3) - 1]
+
 $arenas.appendChild(createPlayer(player1))
 $arenas.appendChild(createPlayer(player2))
-
 $controlForm.addEventListener('submit', function (event) {
     event.preventDefault();
 
@@ -45,10 +49,8 @@ $controlForm.addEventListener('submit', function (event) {
 
     for (let itemss of $controlForm) {
         if (itemss.checked && itemss.name === 'hit') {
-
             playerAttack.value = getRandomNumber(HIT[itemss.value])
             playerAttack.hit = itemss.value
-
         }
 
         if (itemss.checked && itemss.name === 'defence') {
@@ -68,32 +70,29 @@ $controlForm.addEventListener('submit', function (event) {
     const enemyHitPoint = enemyAttack()
     changeHPlayers(playerHitPoints, enemyHitPoint)
 
-
     if (player1.hp === 0 || player2.hp === 0) {
         $randomButton.disabled = true
         createReloadButton()
 
         if (player2.hp === 0 && player1.hp !== 0) {
-            return $arenas.appendChild(winner(player1.name))
+            return montainWinnerName(player1.name)
         }
         if (player1.hp === 0 && player2.hp !== 0) {
-            return $arenas.appendChild(winner(player2.name))
+            return montainWinnerName(player2.name)
         }
 
-        return $arenas.appendChild(winner())
+        return montainWinnerName()
     }
-
-
 })
 
 function enemyAttack() {
-    const hit = ATTACK[getRandomNumber(3) - 1]
-    const defence = ATTACK[getRandomNumber(3) - 1]
+    const hit = getIIPoints()
+    const defence = getIIPoints()
 
     return {
         value: getRandomNumber(HIT[hit]),
         hit,
-        defence
+        defence,
     }
 }
 
@@ -126,9 +125,6 @@ function createPlayer(playerC) {
     return player1
 }
 
-const getRandomNumber = (num) => Math.ceil(Math.random() * num)
-
-
 function elementHP() {
     return document.querySelector(`.player${this.player} .life`)
 }
@@ -146,18 +142,14 @@ function changeHP(hitPoints) {
 }
 
 function changeHPlayers(player, enemy) {
-
     console.table(enemy)
     console.table(player)
 
-
     if(enemy.hit !== player.defence){
-        console.log(1)
         player1.changeHP(enemy.value)
 
     }
     if(player.hit !== enemy.defence){
-        console.log(2)
         player2.changeHP(player.value)
     }
 
@@ -183,29 +175,9 @@ function createReloadButton() {
     $reloadWrap.appendChild($restartButton);
 
     const $buttonRestart = document.querySelector(`.reloadWrap`, `.button`);
-    $buttonRestart.addEventListener('click', function () {
+    $buttonRestart.addEventListener('click', ()=> {
         window.location.reload()
     })
 
     $restartButton.innerText = 'Restart';
 }
-
-
-// $randomButton.addEventListener('click', function () {
-//     changeHPlayers()
-//
-//
-//     if (player1.hp === 0 || player2.hp === 0) {
-//         $randomButton.disabled = true
-//         createReloadButton()
-//
-//         if (player2.hp === 0 && player1.hp !== 0) {
-//             return $arenas.appendChild(winner(player1.name))
-//         }
-//         if (player1.hp === 0 && player2.hp !== 0) {
-//             return $arenas.appendChild(winner(player2.name))
-//         }
-//
-//         return $arenas.appendChild(winner())
-//     }
-// })
