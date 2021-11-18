@@ -7,9 +7,9 @@ const player1 = {
     attack: function () {
         return console.log(`${this.name} Fight...`)
     },
-    elHP: elHP,
-    changeHP: changeHP,
-    renderHP: renderHP,
+    elementHP,
+    changeHP,
+    renderHP,
 }
 
 const player2 = {
@@ -21,16 +21,16 @@ const player2 = {
     attack: function () {
         return console.log(`${this.name} Fight...`)
     },
-    elHP: elHP,
-    changeHP: changeHP,
-    renderHP: renderHP,
+    elementHP,
+    changeHP,
+    renderHP,
 }
 
-const arenas = document.querySelector('.arenas')
+const $arenas = document.querySelector('.arenas')
 const $randomButton = document.querySelector('.button')
-const $buttonCreater = document.querySelector('.control')
-arenas.appendChild(createPlayer(player1))
-arenas.appendChild(createPlayer(player2))
+//const $buttonCreater = document.querySelector('.control')
+$arenas.appendChild(createPlayer(player1))
+$arenas.appendChild(createPlayer(player2))
 
 function createNewElement(tag, className) {
     const $tag = document.createElement(tag)
@@ -61,29 +61,27 @@ function createPlayer(playerC) {
     return player1
 }
 
-const getRandomNumber = () => Math.ceil(Math.random() * 20)
+const getRandomNumber = (num) => Math.ceil(Math.random() * num)
 
 function changeHP(hitPoints) {
     this.hp -= hitPoints
 
-    if (this.hp > 0) {
-        return this.hp
+    if (this.hp <= 0) {
+        this.hp = 0
     }
-
-    return this.hp = 0
 }
 
-function elHP() {
+function elementHP() {
     return document.querySelector(`.player${this.player} .life`)
 }
 
 function renderHP() {
-    this.elHP().style.width = this.hp + '%'
+    this.elementHP().style.width = this.hp + '%'
 }
 
-function changeHPPlayers() {
-    player1.changeHP(getRandomNumber())
-    player2.changeHP(getRandomNumber())
+function changeHPlayers() {
+    player1.changeHP(getRandomNumber(20))
+    player2.changeHP(getRandomNumber(20))
 
     player1.renderHP()
     player2.renderHP()
@@ -103,36 +101,34 @@ function createReloadButton() {
     const $reloadWrap = createNewElement('div', 'reloadWrap');
     const $restartButton = createNewElement('button', 'button');
 
-    $restartButton.innerText = 'Restart';
+    $arenas.appendChild($reloadWrap)
     $reloadWrap.appendChild($restartButton);
 
-    return $reloadWrap;
-}
-
-function showRestartButton() {
-    $buttonCreater.appendChild(createReloadButton())
-    const $buttonRestart = document.querySelector(`.reloadWrap`, '.button');
+    const $buttonRestart = document.querySelector(`.reloadWrap`, `.button`);
     $buttonRestart.addEventListener('click', function () {
         window.location.reload()
     })
+
+    $restartButton.innerText = 'Restart';
 }
 
 
+
 $randomButton.addEventListener('click', function () {
-    changeHPPlayers()
+    changeHPlayers()
 
 
     if (player1.hp === 0 || player2.hp === 0) {
         $randomButton.disabled = true
-        showRestartButton()
+        createReloadButton()
 
         if (player2.hp === 0 && player1.hp !== 0) {
-            return arenas.appendChild(winner(player1.name))
+            return $arenas.appendChild(winner(player1.name))
         }
         if (player1.hp === 0 && player2.hp !== 0) {
-            return arenas.appendChild(winner(player2.name))
+            return $arenas.appendChild(winner(player2.name))
         }
 
-        return arenas.appendChild(winner())
+        return $arenas.appendChild(winner())
     }
 })
