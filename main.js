@@ -75,7 +75,14 @@ const HIT = {
 }
 const ATTACK = ['head', 'body', 'foot'];
 
-const montainWinnerName = (name) => $arenas.appendChild(winner(name))
+const montainWinnerName = (winnerName, loserName) => {
+    console.log(winnerName)
+    console.log(loserName)
+
+    generateLogs("end", winnerName, loserName)
+
+   $arenas.appendChild(winner(winnerName))
+}
 const getRandomNumber = (num) => Math.ceil(Math.random() * num)
 const getIIPoints = () => ATTACK[getRandomNumber(3) - 1]
 
@@ -112,25 +119,77 @@ function enemyAttack() {
     }
 }
 
-function generateLogs(type, player1, player2) {
-    const text = logs[type][0]
-        .replace('[playerKick]', player1.name)
-        .replace('[playerDefence]', player2.name)
-    //console.log(text)
-    const commentAbotHits = `<p>${text}</p>`
-    $chat.insertAdjacentHTML('afterbegin', commentAbotHits)
+function startBattle(player1, player2, time) {
+    generateLogs('start', player1.name, player2.name,time)
 }
 
+const commentInChat = (logType) => `<p>${logType}</p>`
+function generateLogs(type, player1, player2,time) {
+    let logType = logs[type]
+    switch (logType) {
+        case "start" :
+            logType
+            .replace('[time]',time)
+            .replace('[player1]', player1)
+            .replace('[player2]', player2)
+            commentInChat(logType)
+            return $chat.insertAdjacentHTML('afterbegin', commentInChat);
+        case "end" :
+            logType[0]
+                .replace('[playerWins]', player1)
+                .replace('[playerLose]', player2)
+            commentInChat(logType)
+            return $chat.insertAdjacentHTML('afterbegin', commentInChat);
+        default:
+            logType[0]
+                .replace('[playerKick]', player1.name)
+                .replace('[playerDefence]', player2.name)
+            // const commentInChat = `<p>${logType}</p>`
+            commentInChat(logType)
+            $chat.insertAdjacentHTML('afterbegin', commentInChat);
+
+    }
+    // if(type=== "start"){
+    //     console.log("start", player1, player2)
+    //     const text = logs[type]
+    //         .replace('[time]',time)
+    //         .replace('[player1]', player1)
+    //         .replace('[player2]', player2)
+    //     const commentInChat = `<p>${text}</p>`
+    //     return $chat.insertAdjacentHTML('afterbegin', commentInChat)
+    // }
+
+    // if(type=== "end"){
+    //     console.log("end", player1, player2)
+    //     const text = logs[type][0]
+    //         .replace('[playerWins]', player1)
+    //         .replace('[playerLose]', player2)
+    //     const commentInChat = `<p>${text}</p>`
+    //     return $chat.insertAdjacentHTML('afterbegin', commentInChat)
+    //
+    // }
+
+    // const text = logs[type][0]
+    //     .replace('[playerKick]', player1.name)
+    //     .replace('[playerDefence]', player2.name)
+    //     const commentInChat = `<p>${text}</p>`
+    //     $chat.insertAdjacentHTML('afterbegin', commentInChat)
+    //
+
+
+}
+let time = new Date()
+startBattle(player1, player2, time)
 function showResult() {
     if (player1.hp === 0 || player2.hp === 0) {
         $randomButton.disabled = true
         createReloadButton()
 
         if (player2.hp === 0 && player1.hp !== 0) {
-            return montainWinnerName(player1.name)
+            return montainWinnerName(player1.name, player2.name)
         }
         if (player1.hp === 0 && player2.hp !== 0) {
-            return montainWinnerName(player2.name)
+            return montainWinnerName(player2.name, player1.name)
         }
 
         return montainWinnerName()
@@ -195,8 +254,8 @@ function changeHP(hitPoints) {
 }
 
 function changeHPlayers(player, enemy) {
-    console.table(enemy)
-    console.table(player)
+    // console.table(enemy)
+    // console.table(player)
 
     if (enemy.hit !== player.defence) {
         player1.changeHP(enemy.value)
@@ -225,7 +284,7 @@ function changeHPlayers(player, enemy) {
 function winner(name) {
     const $winnerTitle = createNewElement('div', 'winnerTitle')
     if (name) {
-        $winnerTitle.innerText = name + 'wins!'
+        $winnerTitle.innerText = name + ' ' + 'wins!'
         return $winnerTitle
     }
     $winnerTitle.innerText = 'draw'
@@ -242,6 +301,7 @@ function createReloadButton() {
     const $buttonRestart = document.querySelector(`.reloadWrap`, `.button`);
     $buttonRestart.addEventListener('click', () => {
         window.location.reload()
+        startBattle(player1, player2)
     })
 
     $restartButton.innerText = 'Restart';
