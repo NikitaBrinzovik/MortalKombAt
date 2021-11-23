@@ -5,22 +5,24 @@ export function changeHPlayers(player, enemy) {
     console.table(enemy)
     console.table(player)
 
-    if (enemy.hit !== player.defence) {
-        let hpAfterHit = player1.changeHP(enemy.value)
-        console.log(hpAfterHit)
-        generateLogs('hit', player2, player1, enemy.value,`[${hpAfterHit}/100]` )
+    let {value:myDamage, hit:myTarget, defence:myDefence} = player
+    let {value:enemyDamage, hit:enemyTarget, defence:enemyDefence} = enemy
+
+    if (enemyTarget !== myDefence) {
+        let hpAfterHit = player1.changeHP(enemyDamage)
+        generateLogs('hit', player2, player1, enemyDamage,`[${hpAfterHit}/100]` )
     }
 
-    if (enemy.hit === player.defence) {
+    if (enemyTarget === myDefence) {
         generateLogs('defence', player2, player1)
     }
 
-    if (player.hit !== enemy.defence) {
-        let hpAfterHit = player2.changeHP(player.value)
-        generateLogs('hit', player1, player2, player.value, `[${hpAfterHit}/100]`)
+    if (myTarget !== enemyDefence) {
+        let hpAfterHit = player2.changeHP(myDamage)
+        generateLogs('hit', player1, player2, myDamage, `[${hpAfterHit}/100]`)
     }
 
-    if (player.hit === enemy.defence) {
+    if (myTarget === enemyDefence) {
         generateLogs('defence', player1, player2,)
     }
 

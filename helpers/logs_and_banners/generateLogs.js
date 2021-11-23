@@ -6,6 +6,9 @@ import {getRandomNumber} from "../getRandomNumber.js";
 
 let text
 export function generateLogs(type, player1, player2, damage, hp) {
+    const {name:myName} = player1
+    const {name:enemyName} = player2
+    
     switch (type) {
         case "draw":
             text = logs[type]
@@ -23,14 +26,14 @@ export function generateLogs(type, player1, player2, damage, hp) {
             return createComment(text, '', '', '');
         case 'defence':
             text = logs[type][getRandomNumber(8) - 1]
-                .replace('[playerKick]', player1.name)
-                .replace('[playerDefence]', player2.name)
+                .replace('[playerKick]', myName)
+                .replace('[playerDefence]', enemyName)
             return createComment(`- ${text}`, '', getHoursAndMinutesNow(), '');
 
         default:
             text = logs[type][getRandomNumber(18) - 1]
-                .replace('[playerKick]', player1.name)
-                .replace('[playerDefence]', player2.name)
+                .replace('[playerKick]', myName)
+                .replace('[playerDefence]', enemyName)
             return createComment(`- ${text}`, -damage, getHoursAndMinutesNow(), hp);
     }
 }
