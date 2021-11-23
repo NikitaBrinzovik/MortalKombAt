@@ -11,7 +11,6 @@ const player1 = {
     changeHP,
     renderHP,
 }
-
 const player2 = {
     player: 2,
     name: "mamitoAleksandrovna",
@@ -74,20 +73,36 @@ const HIT = {
     foot: 20,
 }
 const ATTACK = ['head', 'body', 'foot'];
+let time = new Date()
+let text
 
-const montainWinnerName = (winnerName, loserName) => {
-    console.log(winnerName)
-    console.log(loserName)
-
-    generateLogs("end", winnerName, loserName)
-
-   $arenas.appendChild(winner(winnerName))
-}
-const getRandomNumber = (num) => Math.ceil(Math.random() * num)
-const getIIPoints = () => ATTACK[getRandomNumber(3) - 1]
 
 $arenas.appendChild(createPlayer(player1))
 $arenas.appendChild(createPlayer(player2))
+$controlForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const playerHitPoints = playerAttack()
+    const enemyHitPoint = enemyAttack()
+
+    changeHPlayers(playerHitPoints, enemyHitPoint)
+    showResult()
+
+})
+
+
+const mountainWinnerName = (winnerName, loserName) => {
+    generateLogs("end", winnerName, loserName)
+    $arenas.appendChild(winner(winnerName))
+}
+
+const getRandomNumber = (num) => Math.ceil(Math.random() * num)
+
+const getIIPoints = () => ATTACK[getRandomNumber(3) - 1]
+
+const commentInChat = (logType) => `<p>${logType}</p>`
+
+const createComment = (text) => $chat.insertAdjacentHTML('afterbegin', commentInChat(text))
 
 function playerAttack() {
     const attack = {}
@@ -120,93 +135,50 @@ function enemyAttack() {
 }
 
 function startBattle(player1, player2, time) {
-    generateLogs('start', player1.name, player2.name,time)
+    generateLogs('start', player1.name, player2.name, time)
 }
 
-const commentInChat = (logType) => `<p>${logType}</p>`
-function generateLogs(type, player1, player2,time) {
-    let logType = logs[type]
-    switch (logType) {
+function generateLogs(type, player1, player2, time) {
+    switch (type) {
         case "start" :
-            logType
-            .replace('[time]',time)
-            .replace('[player1]', player1)
-            .replace('[player2]', player2)
-            commentInChat(logType)
-            return $chat.insertAdjacentHTML('afterbegin', commentInChat);
+            text = logs[type]
+                .replace('[time]', time)
+                .replace('[player1]', player1)
+                .replace('[player2]', player2)
+            return createComment(text);
         case "end" :
-            logType[0]
+            text = logs[type][getRandomNumber(3) - 1]
                 .replace('[playerWins]', player1)
                 .replace('[playerLose]', player2)
-            commentInChat(logType)
-            return $chat.insertAdjacentHTML('afterbegin', commentInChat);
-        default:
-            logType[0]
+            return createComment(text);
+        case 'defence':
+            text = logs[type][getRandomNumber(8) - 1]
                 .replace('[playerKick]', player1.name)
                 .replace('[playerDefence]', player2.name)
-            // const commentInChat = `<p>${logType}</p>`
-            commentInChat(logType)
-            $chat.insertAdjacentHTML('afterbegin', commentInChat);
-
+            return createComment(text);
+        default:
+            text = logs[type][getRandomNumber(18) - 1]
+                .replace('[playerKick]', player1.name)
+                .replace('[playerDefence]', player2.name)
+            return createComment(text);
     }
-    // if(type=== "start"){
-    //     console.log("start", player1, player2)
-    //     const text = logs[type]
-    //         .replace('[time]',time)
-    //         .replace('[player1]', player1)
-    //         .replace('[player2]', player2)
-    //     const commentInChat = `<p>${text}</p>`
-    //     return $chat.insertAdjacentHTML('afterbegin', commentInChat)
-    // }
-
-    // if(type=== "end"){
-    //     console.log("end", player1, player2)
-    //     const text = logs[type][0]
-    //         .replace('[playerWins]', player1)
-    //         .replace('[playerLose]', player2)
-    //     const commentInChat = `<p>${text}</p>`
-    //     return $chat.insertAdjacentHTML('afterbegin', commentInChat)
-    //
-    // }
-
-    // const text = logs[type][0]
-    //     .replace('[playerKick]', player1.name)
-    //     .replace('[playerDefence]', player2.name)
-    //     const commentInChat = `<p>${text}</p>`
-    //     $chat.insertAdjacentHTML('afterbegin', commentInChat)
-    //
-
-
 }
-let time = new Date()
-startBattle(player1, player2, time)
+
 function showResult() {
     if (player1.hp === 0 || player2.hp === 0) {
         $randomButton.disabled = true
         createReloadButton()
 
         if (player2.hp === 0 && player1.hp !== 0) {
-            return montainWinnerName(player1.name, player2.name)
+            return mountainWinnerName(player1.name, player2.name)
         }
         if (player1.hp === 0 && player2.hp !== 0) {
-            return montainWinnerName(player2.name, player1.name)
+            return mountainWinnerName(player2.name, player1.name)
         }
 
-        return montainWinnerName()
+        return mountainWinnerName()
     }
 }
-
-$controlForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    const playerHitPoints = playerAttack()
-    const enemyHitPoint = enemyAttack()
-
-    changeHPlayers(playerHitPoints, enemyHitPoint)
-    showResult()
-
-})
-
 
 function createNewElement(tag, className) {
     const $tag = document.createElement(tag)
@@ -306,3 +278,5 @@ function createReloadButton() {
 
     $restartButton.innerText = 'Restart';
 }
+
+startBattle(player1, player2, time)
