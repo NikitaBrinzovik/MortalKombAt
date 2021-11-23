@@ -1,6 +1,7 @@
 import {player1, player2} from "../../store/players.js";
-import {$randomButton, createReloadButton} from "../../main.js";
+import {$randomButton} from "../../main.js";
 import {mountainWinnerName} from "./bannerAtTheEndOfbattle.js";
+import {createReloadButton} from "../element_creaters/createReloadButton.js";
 
 export function showResult() {
     if (player1.hp === 0 || player2.hp === 0) {

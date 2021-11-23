@@ -47,23 +47,5 @@ export function createPlayer(playerC) {
 
     return player1
 }
+
 startBattle(player1, player2)
-
-
-
-export function createReloadButton() {
-    const $reloadWrap = createNewElement('div', 'reloadWrap');
-    const $restartButton = createNewElement('button', 'button');
-
-    $arenas.appendChild($reloadWrap)
-    $reloadWrap.appendChild($restartButton);
-
-    const $buttonRestart = document.querySelector(`.reloadWrap`, `.button`);
-    $buttonRestart.addEventListener('click', () => {
-        window.location.reload()
-        startBattle(player1, player2)
-    })
-
-    $restartButton.innerText = 'Restart';
-}
-
