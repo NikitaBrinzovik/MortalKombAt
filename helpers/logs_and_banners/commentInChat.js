@@ -1,0 +1,1 @@
+export const commentInChat = (time,text, damage, hp) => `<p>${time} ${text} ${damage} ${hp}</p>`
