@@ -39,6 +39,7 @@ export class Game {
         this.player1 = new Player({player: 1, name: 'Vasiliy', img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif'});
         this.player2 = new Player({player: 2, name: 'mamitoAleksandrovna', img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif'});
         this.$controlForm = document.querySelector('.control')
+        this.fff()
     }
     fff =() => {
         $controlForm.addEventListener('submit', function (event) {
