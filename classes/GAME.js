@@ -23,11 +23,13 @@ export class Game {
         this.$controlForm = document.querySelector('.control')
         this.player1 = new Player({
             player: 1,
+            hp: 100,
             name: 'Vasiliy',
             img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif'
         });
         this.player2 = new Player({
             player: 2,
+            hp: 100,
             name: 'mamitoAleksandrovna',
             img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif'
         });
@@ -196,12 +198,17 @@ export class Game {
     changeHPlayers = (player, enemy) => {
         console.table(enemy)
         console.table(player)
+        console.log('--------------------------------------')
 
         let {value: myDamage, hit: myTarget, defence: myDefence} = player
         let {value: enemyDamage, hit: enemyTarget, defence: enemyDefence} = enemy
+        console.log(enemyDamage, enemyTarget, enemyDefence)
 
         if (enemyTarget !== myDefence) {
+            console.log(this.player1, '================')
+            console.log(enemyDamage, '================')
             let hpAfterHit = this.player1.changeHP(enemyDamage)
+            console.log(hpAfterHit, '================')
             this.generateLogs('hit', this.player2, this.player1, enemyDamage, `[${hpAfterHit}/100]`)
         }
 
@@ -227,7 +234,7 @@ export class Game {
         this.$arenas.appendChild(this.createPlayer(this.player2));
         this.generateLogs('start', this.player1, this.player2);
 
-        this.$controlForm.addEventListener('submit', function (event) {
+        this.$controlForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
             const playerHitPoints = this.playerAttack()
