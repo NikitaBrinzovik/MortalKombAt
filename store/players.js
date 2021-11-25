@@ -30,18 +30,18 @@ export class Player {
     }
 }
 
-export const player1 = new Player({
-    name: "Vasiliy",
-    player: 1,
-    hp: 100,
-    img: "http://reactmarathon-api.herokuapp.com/assets/subzero.gif",
-})
-export const player2  = new Player ({
-    player: 2,
-    name: "mamitoAleksandrovna",
-    hp: 100,
-    img: "http://reactmarathon-api.herokuapp.com/assets/sonya.gif",
-})
+// export const player1 = new Player({
+//     name: "Vasiliy",
+//     player: 1,
+//     hp: 100,
+//     img: "http://reactmarathon-api.herokuapp.com/assets/subzero.gif",
+// })
+// export const player2  = new Player ({
+//     player: 2,
+//     name: "mamitoAleksandrovna",
+//     hp: 100,
+//     img: "http://reactmarathon-api.herokuapp.com/assets/sonya.gif",
+// })
 
 
 

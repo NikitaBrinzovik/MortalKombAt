@@ -5,15 +5,16 @@ import {enemyAttack} from "./helpers/action_functions/enemyAttck.js";
 import {changeHPlayers} from "./helpers/helth_points/changeHPPlayers.js";
 import {startBattle} from "./helpers/logs_and_banners/startBanner.js";
 import {showResult} from "./helpers/logs_and_banners/showResult.js";
+import Game from "./GAME.js";
 
 
-export const $arenas = document.querySelector('.arenas')
-export const $chat = document.querySelector('.chat')
-export const $randomButton = document.querySelector('.button')
-export const $controlForm = document.querySelector('.control')
-
-$arenas.appendChild(createPlayer(player1))
-$arenas.appendChild(createPlayer(player2))
+// export const $arenas = document.querySelector('.arenas')
+// export const $chat = document.querySelector('.chat')
+// export const $randomButton = document.querySelector('.button')
+// export const $controlForm = document.querySelector('.control')
+//
+// $arenas.appendChild(createPlayer(player1))
+// $arenas.appendChild(createPlayer(player2))
 
 
 $controlForm.addEventListener('submit', function (event) {
@@ -27,25 +28,28 @@ $controlForm.addEventListener('submit', function (event) {
 
 })
 
-export function createPlayer(playerC) {
-    const player1 = createNewElement("div", "player" + playerC.player)
-    const progressbar = createNewElement("div", "progressbar")
-    const life = createNewElement("div", "life")
-    const name = createNewElement("div", "name")
-    const character = createNewElement("div", "character")
-    const img = createNewElement('img', "img")
-
-    progressbar.appendChild(name)
-    progressbar.appendChild(life)
-    character.appendChild(img)
-    player1.appendChild(progressbar)
-    player1.appendChild(character)
-
-    life.style.width = playerC.hp + "%"
-    name.innerText = playerC.name
-    img.src = playerC.img
-
-    return player1
-}
+// export function createPlayer(playerC) {
+//     const player1 = createNewElement("div", "player" + playerC.player)
+//     const progressbar = createNewElement("div", "progressbar")
+//     const life = createNewElement("div", "life")
+//     const name = createNewElement("div", "name")
+//     const character = createNewElement("div", "character")
+//     const img = createNewElement('img', "img")
+//
+//     progressbar.appendChild(name)
+//     progressbar.appendChild(life)
+//     character.appendChild(img)
+//     player1.appendChild(progressbar)
+//     player1.appendChild(character)
+//
+//     life.style.width = playerC.hp + "%"
+//     name.innerText = playerC.name
+//     img.src = playerC.img
+//
+//     return player1
+// }
 
 startBattle(player1, player2)
+
+const game = new Game();
+game.start()
