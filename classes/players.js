@@ -1,8 +1,4 @@
-/*import {changeHP} from "../helpers/helth_points/changeHP.js";
-import {renderHP} from "../helpers/helth_points/renderHP.js";
-import {elementHP} from "../helpers/helth_points/elementHP.js";*/
-
-
+import {createNewElement} from "../helpers/createElement.js";
 
 export class Player {
     constructor(props) {
@@ -11,7 +7,26 @@ export class Player {
         this.hp = props.hp
         this.img = props.img
     }
+    createPlayer = () => {
+        const player = createNewElement("div", "player" + this.player)
+        const progressbar = createNewElement("div", "progressbar")
+        const life = createNewElement("div", "life")
+        const name = createNewElement("div", "name")
+        const character = createNewElement("div", "character")
+        const img = createNewElement('img', "img")
 
+        progressbar.appendChild(name)
+        progressbar.appendChild(life)
+        character.appendChild(img)
+        player.appendChild(progressbar)
+        player.appendChild(character)
+
+        life.style.width = this.hp + "%"
+        name.innerText = this.name
+        img.src = this.img
+
+        return player
+    }
     renderHP = () => {
         this.elementHP().style.width = this.hp + '%'
     }
@@ -29,5 +44,6 @@ export class Player {
     attack =()=> {
         return console.log(`${this.name} Fight...`)
     }
+
 }
 

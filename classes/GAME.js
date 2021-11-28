@@ -3,6 +3,7 @@ import {ATTACK} from "../store/body_parts_to_attack.js";
 
 import {logs} from "../store/logs.js";
 import {Player} from "./players.js";
+import {createNewElement} from "../helpers/createElement.js";
 
 
 let time = new Date()
@@ -14,6 +15,8 @@ export const getHoursAndMinutesNow = () => {
     return `${hours}:${minutes}`
 }
 
+let player1
+let player2
 
 export class Game {
     constructor(props) {
@@ -21,51 +24,45 @@ export class Game {
         this.$chat = document.querySelector('.chat');
         this.$randomButton = document.querySelector('.button')
         this.$controlForm = document.querySelector('.control')
-        this.player1 = new Player({
-            player: 1,
-            hp: 100,
-            name: 'Vasiliy',
-            img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif'
-        });
-        this.player2 = new Player({
-            player: 2,
-            hp: 100,
-            name: 'mamitoAleksandrovna',
-            img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif'
-        });
     }
 
     text
-
     getRandomNumber = (num) => Math.ceil(Math.random() * num)
-
-    createNewElement = (tag, className) => {
-        const $tag = document.createElement(tag)
-        if (className) {
-            $tag.classList.add(className)
-        }
-        return $tag
+    getPlayers = async () => {
+        const body = fetch('https://reactmarathon-api.herokuapp.com/api/mk/players').then(res => res.json())
+        return body
     }
 
-    createPlayer = (playerC) => {
-        const player1 = this.createNewElement("div", "player" + playerC.player)
-        const progressbar = this.createNewElement("div", "progressbar")
-        const life = this.createNewElement("div", "life")
-        const name = this.createNewElement("div", "name")
-        const character = this.createNewElement("div", "character")
-        const img = this.createNewElement('img', "img")
+    start = async () => {
+        const players = await this.getPlayers();
+        console.log(players)
+        const pl1 = players[this.getRandomNumber(players.length) - 1]
+        const pl2 = players[this.getRandomNumber(players.length) - 1]
+        console.log(pl1, pl2)
+        player1 = new Player({
+            ...pl1,
+            player: 1,
+            rootSelector: 'arenas',
+        })
+        player2 = new Player({
+            ...pl2,
+            player: 2,
+            rootSelector: 'arenas',
+        })
 
-        progressbar.appendChild(name)
-        progressbar.appendChild(life)
-        character.appendChild(img)
-        player1.appendChild(progressbar)
-        player1.appendChild(character)
+        this.$arenas.appendChild(player1.createPlayer());
+        this.$arenas.appendChild(player2.createPlayer());
+        this.$controlForm.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-        life.style.width = playerC.hp + "%"
-        name.innerText = playerC.name
-        img.src = playerC.img
+            const playerHitPoints = this.playerAttack()
+            const enemyHitPoint = this.enemyAttack()
 
-        return player1
+            this.changeHPlayers(playerHitPoints, enemyHitPoint)
+            this.showResult()
+        })
+        return this.startBattle(player1, player2);
+
     }
 
     getIIPoints = () => ATTACK[this.getRandomNumber(3) - 1]
@@ -100,8 +97,8 @@ export class Game {
     }
 
     createReloadButton = () => {
-        const $reloadWrap = this.createNewElement('div', 'reloadWrap');
-        const $restartButton = this.createNewElement('button', 'button');
+        const $reloadWrap = createNewElement('div', 'reloadWrap');
+        const $restartButton = createNewElement('button', 'button');
 
         this.$arenas.appendChild($reloadWrap)
         $reloadWrap.appendChild($restartButton);
@@ -115,7 +112,7 @@ export class Game {
     }
 
     winner = (name) => {
-        const $winnerTitle = this.createNewElement('div', 'winnerTitle')
+        const $winnerTitle = createNewElement('div', 'winnerTitle')
         if (name) {
             $winnerTitle.innerText = `${name} wins!`
             return $winnerTitle
@@ -139,8 +136,8 @@ export class Game {
     commentInChat = (time, text, damage, hp) => `<p>${time} ${text} ${damage} ${hp}</p>`
 
     showResult = () => {
-        const {hp: myHP, name: myName} = this.player1
-        const {hp: enemyHP, name: enemyName} = this.player2
+        const {hp: myHP, name: myName} = player1
+        const {hp: enemyHP, name: enemyName} = player2
 
         if (myHP === 0 || enemyHP === 0) {
             this.$randomButton.disabled = true
@@ -156,10 +153,6 @@ export class Game {
 
             return this.mountainWinnerName()
         }
-    }
-
-    startBattle = (player1, player2) => {
-        this.generateLogs('start', player1.name, player2.name)
     }
 
     generateLogs = (type, player1, player2, damage, hp) => {
@@ -198,54 +191,38 @@ export class Game {
     changeHPlayers = (player, enemy) => {
         console.table(enemy)
         console.table(player)
-        console.log('--------------------------------------')
+        console.log('-----------sosi jopy---------------')
 
         let {value: myDamage, hit: myTarget, defence: myDefence} = player
         let {value: enemyDamage, hit: enemyTarget, defence: enemyDefence} = enemy
         console.log(enemyDamage, enemyTarget, enemyDefence)
 
         if (enemyTarget !== myDefence) {
-            console.log(this.player1, '================')
-            console.log(enemyDamage, '================')
-            let hpAfterHit = this.player1.changeHP(enemyDamage)
-            console.log(hpAfterHit, '================')
-            this.generateLogs('hit', this.player2, this.player1, enemyDamage, `[${hpAfterHit}/100]`)
+            const hpAfterHit = player1.changeHP(enemyDamage)
+            this.generateLogs('hit', player2, player1, enemyDamage, `[${hpAfterHit}/100]`)
         }
 
         if (enemyTarget === myDefence) {
-            this.generateLogs('defence', this.player2, this.player1)
+            this.generateLogs('defence', player2, player1)
         }
 
         if (myTarget !== enemyDefence) {
-            let hpAfterHit = this.player2.changeHP(myDamage)
-            this.generateLogs('hit', this.player1, this.player2, myDamage, `[${hpAfterHit}/100]`)
+            const hpAfterHit = player2.changeHP(myDamage)
+            this.generateLogs('hit', player1, player2, myDamage, `[${hpAfterHit}/100]`)
         }
 
         if (myTarget === enemyDefence) {
-            this.generateLogs('defence', this.player1, this.player2,)
+            this.generateLogs('defence', player1, player2,)
         }
 
-        this.player1.renderHP()
-        this.player2.renderHP()
-    }
-    start = () => {
-
-        this.$arenas.appendChild(this.createPlayer(this.player1));
-        this.$arenas.appendChild(this.createPlayer(this.player2));
-        this.generateLogs('start', this.player1, this.player2);
-
-        this.$controlForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const playerHitPoints = this.playerAttack()
-            const enemyHitPoint = this.enemyAttack()
-
-
-            this.changeHPlayers(playerHitPoints, enemyHitPoint)
-            this.showResult()
-        })
+        player1.renderHP()
+        player2.renderHP()
     }
 
+
+    startBattle = (player1, player2) => {
+        this.generateLogs('start', player1.name, player2.name)
+    }
 }
 
 export default Game
