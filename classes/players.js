@@ -7,6 +7,7 @@ export class Player {
         this.hp = props.hp
         this.img = props.img
     }
+
     createPlayer = () => {
         const player = createNewElement("div", "player" + this.player)
         const progressbar = createNewElement("div", "progressbar")
@@ -44,6 +45,4 @@ export class Player {
     attack =()=> {
         return console.log(`${this.name} Fight...`)
     }
-
 }
-
